@@ -1,0 +1,50 @@
+{
+  "name": "devstack",
+  "version": "1.0.0",
+  "description": "",
+  "author": "Pavel Hazmuka <ph@hazmi.cz>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "???.git"
+  },
+  "keywords": [],
+  "scripts": {
+    "clean": "rimraf build",
+    "scss": "node-sass --output-style compressed -o build/css src/scss",
+    "autoprefixer": "postcss -u autoprefixer -r build/css/*",
+    "uglifyjs": "mkdirp build/js && uglifyjs src/js/*.js -o build/js/app.min.js -c -m --source-map \"filename=build/js/app.min.js.map\"",
+    "imagemin": "imagemin src/images/ --out-dir=build/images",
+    "icons": "mkdirp build/images/icons && svgo -f src/images/icons -o build/images/icons && svg-sprite-generate -d src/images/icons -o build/images/icons/svg-sprites.svg && rimraf build/images/*.svg",
+    "watch:css": "onchange \"src/scss/*.scss\" -- npm run -s build:css",
+    "watch:js": "onchange \"src/js/*.js\" -- npm run -s build:js",
+    "watch:images": "onchange \"src/images/*\" -- npm run -s build:images",
+    "build:css": "npm run scss && npm run autoprefixer",
+    "build:js": "npm run uglifyjs",
+    "build:images": "npm run imagemin && npm run icons",
+    "serve": "browser-sync start --proxy \"localhost\" --files \"build/css/*.css, build/js/*.js, ./*.php\"",
+    "build": "npm run clean && npm run build:css && npm run build:js && npm run build:images",
+    "start": "concurrently \"npm run serve\" \"npm run watch:css\" \"npm run watch:js\" \"npm run watch:images\""
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.4.7",
+    "browser-sync": "^2.26.3",
+    "concurrently": "^4.1.0",
+    "imagemin-cli": "^4.0.0",
+    "mkdirp": "^0.5.1",
+    "node-sass": "^4.11.0",
+    "onchange": "^5.2.0",
+    "postcss-cli": "^6.1.1",
+    "rimraf": "^2.6.3",
+    "svg-sprite-generator": "0.0.7",
+    "svgo": "^1.1.1",
+    "uglify-js": "^3.4.9"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "dependencies": {}
+}
